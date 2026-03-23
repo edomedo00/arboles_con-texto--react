@@ -3,7 +3,9 @@ import React from "react";
 const LobbyText: React.FC = () => {
   return (
     <div className="text">
-      <p className="text__title">metáflora fractal</p>
+      <p className="text__title">
+        metá<span className="text__title--accent">flora</span> fractal
+      </p>
       <div className="text-below">
         <p className="text__text">
           metáflora fractal parte de la idea de arbol y sus asociaciones: árbol

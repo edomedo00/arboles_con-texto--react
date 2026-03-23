@@ -51,6 +51,14 @@ main {
   border-bottom: 2px solid #000000;
 }
 
+.bottom-line {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin-bottom: 8rem;
+
+  border-top: 2px solid #000000;
+}
+
 .text {
   grid-column: 1 / span 6;
 
@@ -58,7 +66,7 @@ main {
     display: flex;
     flex-direction: column;
     gap: 4rem;
-    padding: 4rem 2rem 2rem 2rem;
+    padding: 4rem 4rem 4rem 4rem;
   }
 
   &__title {
@@ -67,14 +75,16 @@ main {
     line-height: 100%;
     letter-spacing: 0.5rem;
 
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-    padding-left: 2rem;
+    padding: 4rem 0 4rem 4rem;
 
     border-bottom: 2px solid #000000;
 
     // border-right: 2px solid #000000;
     // border-left: 2px solid #000000;
+
+    &--accent {
+      color: $green;
+    }
   }
 
   &__text {
@@ -102,6 +112,10 @@ main {
 .link {
   text-decoration: none;
   color: $black;
+
+  &:hover {
+    color: $green;
+  }
 }
 
 .lobby-right {
@@ -118,20 +132,20 @@ main {
   }
   .start {
     align-self: center;
-    padding: 5rem 2rem 2rem 2rem;
+    padding: 4rem 2rem 4rem 2rem;
   }
 }
 
 .btn {
   text-decoration: none;
   font-family: "Ancizar Serif";
-  font-size: 4rem;
+  font-size: 9.6rem;
   line-height: 3.6rem;
   font-weight: 400;
 
   background-color: $bg-primary;
-  border: 1px solid $green;
-  // border: none;
+  // border: 1px solid $green;
+  border: none;
   letter-spacing: 0.5rem;
   padding: 1.5rem 2rem;
   border-radius: 0.5rem;
@@ -143,6 +157,6 @@ main {
 
   &:hover {
     transform: scale(1.05);
-    letter-spacing: 0.6rem;
+    letter-spacing: 100%;
   }
 }

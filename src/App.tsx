@@ -10,6 +10,7 @@ function App() {
       <LobbyText />
 
       <LobbyPlant />
+      <span className="bottom-line"></span>
     </>
   );
 }
