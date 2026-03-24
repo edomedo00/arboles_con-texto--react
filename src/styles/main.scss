@@ -40,33 +40,34 @@ main {
 
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(2, auto);
+  grid-template-rows: auto 1fr auto;
 }
 
 .top-line {
   grid-column: 1 / -1;
-  width: 100%;
+  grid-row: 1;
   margin-top: 8rem;
 
-  border-bottom: 2px solid #000000;
+  border-bottom: 2px solid $black;
 }
 
 .bottom-line {
   grid-column: 1 / -1;
-  width: 100%;
+  grid-row: 3;
   margin-bottom: 8rem;
 
-  border-top: 2px solid #000000;
+  border-top: 2px solid $black;
 }
 
 .text {
   grid-column: 1 / span 6;
 
   .text-below {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 4rem;
-    padding: 4rem 4rem 4rem 4rem;
+    padding: 4rem;
   }
 
   &__title {
@@ -77,10 +78,10 @@ main {
 
     padding: 4rem 0 4rem 4rem;
 
-    border-bottom: 2px solid #000000;
+    border-bottom: 2px solid $black;
 
-    // border-right: 2px solid #000000;
-    // border-left: 2px solid #000000;
+    // border-right: 2px solid $black;
+    // border-left: 2px solid $black;
 
     &--accent {
       color: $green;
@@ -123,12 +124,12 @@ main {
   display: flex;
   flex-direction: column;
   height: 100%;
-  border-left: 2px solid #000000;
+  border-left: 2px solid $black;
 
   .plant-container {
     flex: 1;
     min-height: 0;
-    border-bottom: 2px solid #000000;
+    border-bottom: 2px solid $black;
   }
   .start {
     align-self: center;
@@ -139,15 +140,14 @@ main {
 .btn {
   text-decoration: none;
   font-family: "Ancizar Serif";
-  font-size: 9.6rem;
-  line-height: 3.6rem;
   font-weight: 400;
+  font-size: 9.6rem;
+  line-height: 100%;
+  letter-spacing: 0.5rem;
 
   background-color: $bg-primary;
-  // border: 1px solid $green;
   border: none;
-  letter-spacing: 0.5rem;
-  padding: 1.5rem 2rem;
+  // padding: 1.5rem 2rem;
   border-radius: 0.5rem;
 }
 
@@ -157,6 +157,6 @@ main {
 
   &:hover {
     transform: scale(1.05);
-    letter-spacing: 100%;
+    // letter-spacing: 100%;
   }
 }

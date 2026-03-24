@@ -26,7 +26,7 @@ const LobbyText: React.FC = () => {
         </p>
         <div className="text__contact">
           <div className="text__contact__names">
-            <p>Poemas por Seydi Pineda</p>
+            <p>Poesía por Seydi Pineda</p>
             <p>Código por Edmundo Medel</p>
           </div>
           <div className="text__contact__instagram">

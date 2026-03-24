@@ -21,8 +21,8 @@ const PlantSketch = () => {
 
         cam = (p as any)._renderer.mainCamera;
 
-        cam.setPosition(-8.7, -57.8, 201.3);
-        cam.lookAt(-8.7, -57.8, 0.0);
+        cam.setPosition(-4.0, -60.4, 201.3);
+        cam.lookAt(-4.0, -60.4, 0.0);
 
         // cam.setPosition(-2.3, -61.3, 152.1);
         // cam.lookAt(-2.3, -61.3, 0.0);
@@ -35,7 +35,7 @@ const PlantSketch = () => {
         p.background(255, 255, 239);
         p.rotateY(angle);
         p.randomSeed(18);
-        p.orbitControl();
+        // p.orbitControl();
         branch(200, 0);
         angle += ANGLE_INC;
       };
@@ -48,7 +48,7 @@ const PlantSketch = () => {
         const segment = iteration === 0 ? short : iteration < 2 ? mid : long;
 
         p.strokeWeight(p.map(len, 10, 100, 0.5, 1.7));
-        p.stroke(33, 88, 42);
+        p.stroke(87, 117, 5);
         p.line(0, 0, 0, 0, segment, 0);
         p.translate(0, segment, 0);
 

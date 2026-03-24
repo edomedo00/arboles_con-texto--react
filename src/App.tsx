@@ -1,18 +1,10 @@
-// import { useState } from "react";
-
-import LobbyPlant from "./components/LobbyPlant";
-import LobbyText from "./components/LobbyText";
+import { useState } from "react";
+import Lobby from "./components/Lobby";
 
 function App() {
-  return (
-    <>
-      <span className="top-line"></span>
-      <LobbyText />
+  const [page, setPage] = useState(0);
 
-      <LobbyPlant />
-      <span className="bottom-line"></span>
-    </>
-  );
+  return <>{page === 0 ? <Lobby setPage={setPage} /> : <></>}</>;
 }
 
 export default App;
