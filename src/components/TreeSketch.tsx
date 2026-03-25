@@ -4,6 +4,7 @@ import Tree2 from "../sketches/Tree2";
 import Tree3 from "../sketches/Tree3";
 
 interface TreeSketchProps {
+  page: number;
   setPage: (page: number) => void;
 }
 
@@ -12,10 +13,20 @@ interface Tree3Controls {
   nextSeed: () => void;
 }
 
-const TreeSketch: React.FC<TreeSketchProps> = ({ setPage }) => {
+const TreeSketch: React.FC<TreeSketchProps> = ({ setPage, page }) => {
+  const [text, setText] = React.useState<string>("");
+
   const headerRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
   const treeControls = useRef<Tree3Controls | null>(null);
+
+  useEffect(() => {
+    fetch(`../assets/texts/${page}.txt`)
+      .then((res) => res.text())
+      .then((data) => setText(data))
+      .catch((err) => console.error("Failed to load text:", err));
+  }, [page]);
+
   useEffect(() => {
     const header = headerRef.current;
     const controls = controlsRef.current;
@@ -33,47 +44,58 @@ const TreeSketch: React.FC<TreeSketchProps> = ({ setPage }) => {
 
   return (
     <div className="tree-main">
-      {/* <Tree1 /> */}
-      {/* <Tree2 /> */}
       <div className="interface-container">
         <div className="header" ref={headerRef}>
-          <button className="btn btn-return" onClick={() => setPage(0)}>
+          <button
+            className={`btn btn-return btn-return--${page}`}
+            onClick={() => setPage(0)}
+          >
             volver
           </button>
           <div className="top-line--interface"></div>
         </div>
         <div className="interface">
           {/* eslint-disable-next-line */}
-          <div className="interface__text">
-            {`Nos quedaremos hoy 
-            en un hueco oscuro 
-            en la médula de un árbol 
-            con un ojo que nos cuida
-            nada podrá atravesarnos 
-            
-            los surcos nos arruyan
-            el sueño inagotable`}
-          </div>
+          <div className="interface__text">{`${text}`}</div>
           <div className="interface__controls" ref={controlsRef}>
             <button
-              className="btn btn-controls"
+              className={`btn btn-controls btn-controls--${page}`}
               onClick={() => treeControls.current?.nextSeed()}
             >
               regenerar
             </button>
             <button
-              className="btn btn-controls"
+              className={`btn btn-controls btn-controls--${page}`}
               onClick={() => treeControls.current?.nextCamera()}
             >
               cambiar vista
             </button>
-            <button className="btn btn-controls">avanzar</button>
+            <button
+              className={`btn btn-controls btn-controls--${page}`}
+              onClick={() => setPage((page + 1) % 4)}
+            >
+              avanzar
+            </button>
           </div>
         </div>
         {/* <div className="interface-text"></div> */}
       </div>
       <div className="tree-container">
-        <Tree3 onReady={(controls) => (treeControls.current = controls)} />
+        {page === 1 ? (
+          <Tree1 onReady={(controls) => (treeControls.current = controls)} />
+        ) : (
+          <></>
+        )}
+        {page === 2 ? (
+          <Tree2 onReady={(controls) => (treeControls.current = controls)} />
+        ) : (
+          <></>
+        )}
+        {page === 3 ? (
+          <Tree3 onReady={(controls) => (treeControls.current = controls)} />
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

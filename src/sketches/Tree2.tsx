@@ -3,7 +3,7 @@ import p5Types from "p5";
 import p5 from "p5";
 
 const FONT_PATH = "../../assets/fonts/ancizar-serif-latin-400-normal.ttf";
-const TEXT_PATH = "../../assets/texts/1.txt";
+const TEXT_PATH = "../../assets/texts/2.txt";
 const SPACING_FACTOR = 0.95;
 
 const CAM_PRESETS = [
@@ -13,7 +13,20 @@ const CAM_PRESETS = [
   { pos: [-155, -181, 133], look: [-69, -213, -27] },
 ];
 
-const Tree2: React.FC = () => {
+// ── Types ────────────────────────────────────────────────────────────────────
+
+interface Tree2Controls {
+  nextCamera: () => void;
+  nextSeed: () => void;
+}
+
+interface Tree2Props {
+  onReady?: (controls: Tree2Controls) => void;
+}
+
+// ── Component ────────────────────────────────────────────────────────────────
+
+const Tree2: React.FC<Tree2Props> = ({ onReady }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const state = useRef({
@@ -29,6 +42,8 @@ const Tree2: React.FC = () => {
 
     cameras: [] as p5Types.Camera[],
     camIndex: 0,
+
+    seed: 11,
   });
 
   useEffect(() => {
@@ -69,13 +84,30 @@ const Tree2: React.FC = () => {
         });
 
         p.setCamera(s.cameras[0]);
+
+        onReady?.({
+          nextCamera: () => {
+            const s = state.current;
+            s.camIndex = (s.camIndex + 1) % s.cameras.length;
+            s.cameras.forEach((c, i) => {
+              c.setPosition(
+                ...(CAM_PRESETS[i].pos as [number, number, number]),
+              );
+              c.lookAt(...(CAM_PRESETS[i].look as [number, number, number]));
+            });
+            p.setCamera(s.cameras[s.camIndex]);
+          },
+          nextSeed: () => {
+            state.current.seed = Math.floor(Math.random() * 10000);
+          },
+        });
       };
 
       p.draw = () => {
         p.background(255, 255, 239);
         p.orbitControl();
         p.rotateY(state.current.angle);
-        p.randomSeed(11);
+        p.randomSeed(state.current.seed);
 
         ground(p);
         branch(p, 200, 0);
@@ -212,17 +244,17 @@ const Tree2: React.FC = () => {
         p.pop();
       };
 
-      p.doubleClicked = () => {
-        state.current.camIndex =
-          (state.current.camIndex + 1) % state.current.cameras.length;
+      // p.doubleClicked = () => {
+      //   state.current.camIndex =
+      //     (state.current.camIndex + 1) % state.current.cameras.length;
 
-        state.current.cameras.forEach((c, i) => {
-          c.setPosition(...(CAM_PRESETS[i].pos as [number, number, number]));
-          c.lookAt(...(CAM_PRESETS[i].look as [number, number, number]));
-        });
+      //   state.current.cameras.forEach((c, i) => {
+      //     c.setPosition(...(CAM_PRESETS[i].pos as [number, number, number]));
+      //     c.lookAt(...(CAM_PRESETS[i].look as [number, number, number]));
+      //   });
 
-        p.setCamera(state.current.cameras[state.current.camIndex]);
-      };
+      //   p.setCamera(state.current.cameras[state.current.camIndex]);
+      // };
 
       p.windowResized = () => p.resizeCanvas(p.windowWidth, p.windowHeight);
     };

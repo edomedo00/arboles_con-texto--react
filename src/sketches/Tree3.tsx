@@ -128,7 +128,6 @@ const Tree3: React.FC<Tree3Props> = ({ onReady }) => {
         }
 
         if (len > 30) {
-          // era 30
           for (let i = 0; i < 6; i++) {
             p.rotateY(60);
             p.push();

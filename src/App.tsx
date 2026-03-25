@@ -8,8 +8,11 @@ function App() {
 
   return (
     <>
-      {page === 0 ? <Lobby setPage={setPage} /> : <></>}
-      {page === 1 ? <TreeSketch setPage={setPage} /> : <></>}
+      {page === 0 ? (
+        <Lobby setPage={setPage} />
+      ) : (
+        <TreeSketch page={page} setPage={setPage} />
+      )}
     </>
   );
 }
