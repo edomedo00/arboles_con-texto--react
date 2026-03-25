@@ -8,12 +8,12 @@ interface LobbyProps {
 
 const Lobby: React.FC<LobbyProps> = ({ setPage }) => {
   return (
-    <>
+    <div className="lobby-main">
       <span className="top-line"></span>
       <LobbyText />
       <LobbyPlant setPage={setPage} />
-      <span className="bottom-line"></span>
-    </>
+      {/* <span className="bottom-line"></span> */}
+    </div>
   );
 };
 

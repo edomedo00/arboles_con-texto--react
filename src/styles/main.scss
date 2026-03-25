@@ -35,7 +35,7 @@ body {
   line-height: 3.6rem;
 }
 
-main {
+.lobby-main {
   margin: 0 8rem 0 8rem;
 
   display: grid;
@@ -48,7 +48,7 @@ main {
   grid-row: 1;
   margin-top: 8rem;
 
-  border-bottom: 2px solid $black;
+  border-bottom: 1px solid$black;
 }
 
 .bottom-line {
@@ -56,7 +56,7 @@ main {
   grid-row: 3;
   margin-bottom: 8rem;
 
-  border-top: 2px solid $black;
+  border-top: 1px solid$black;
 }
 
 .text {
@@ -78,10 +78,10 @@ main {
 
     padding: 4rem 0 4rem 4rem;
 
-    border-bottom: 2px solid $black;
+    border-bottom: 1px solid$black;
 
-    // border-right: 2px solid $black;
-    // border-left: 2px solid $black;
+    // border-right: 1px solid$black;
+    // border-left: 1px solid$black;
 
     &--accent {
       color: $green;
@@ -124,12 +124,12 @@ main {
   display: flex;
   flex-direction: column;
   height: 100%;
-  border-left: 2px solid $black;
+  border-left: 1px solid$black;
 
   .plant-container {
     flex: 1;
     min-height: 0;
-    border-bottom: 2px solid $black;
+    border-bottom: 1px solid$black;
   }
   .start {
     align-self: center;
@@ -158,5 +158,144 @@ main {
   &:hover {
     transform: scale(1.05);
     // letter-spacing: 100%;
+  }
+}
+
+.tree-main {
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.tree-container {
+  position: fixed;
+}
+
+.interface-container {
+  z-index: 10;
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+
+  padding: 0 8rem 0 8rem;
+
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: auto 1fr;
+
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.header {
+  grid-column: 1 / -1;
+  // border-bottom: 1px solid $black;
+  padding-top: 8rem;
+
+  position: relative;
+  opacity: 0;
+  animation: fade-out-delayed 6s ease forwards;
+  transition: opacity 2s cubic-bezier(0.72, 0.14, 0.8, 0.3); // slow fade out on mouse leave
+
+  &:hover {
+    opacity: 1;
+    transition: opacity 0.8s ease; // fast fade in on mouse enter
+  }
+}
+
+.btn-return {
+  font-size: 2.8rem;
+  line-height: 3.6rem;
+  letter-spacing: normal;
+  padding: 1.5rem 2rem;
+
+  background-color: transparent;
+
+  position: absolute;
+  bottom: -1.5rem;
+  right: -2rem;
+
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.05) translateY(-2px);
+    color: $magenta;
+  }
+}
+
+.interface {
+  grid-column: 1 / 7;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: 1fr auto;
+
+  align-content: space-between;
+
+  &__text {
+    grid-column: 1/5;
+    grid-row: 1;
+    padding-top: 8rem;
+    white-space: pre-line;
+  }
+
+  &__controls {
+    grid-column: 1/5;
+    grid-row: 2;
+    display: flex;
+    justify-content: space-between;
+    align-self: end;
+    padding-top: 2rem;
+    padding-bottom: 16rem;
+    // margin-bottom: 8rem;
+
+    // border-top: 1px solid$black;
+
+    opacity: 0;
+    animation: fade-out-delayed 6s ease forwards;
+    transition: opacity 2s cubic-bezier(0.72, 0.14, 0.8, 0.3); // slow fade out on mouse leave
+
+    &:hover {
+      opacity: 1;
+      transition: opacity 0.8s ease; // fast fade in on mouse enter
+    }
+  }
+}
+
+.btn-controls {
+  font-size: 2.8rem;
+  line-height: 3.6rem;
+  letter-spacing: normal;
+  padding: 1.5rem 2rem;
+  color: $black;
+  background-color: transparent;
+
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.05) translateY(-2px);
+    color: $magenta;
+  }
+}
+
+@keyframes fade-out-delayed {
+  0% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

@@ -16,13 +16,13 @@ const PlantSketch = () => {
           containerRef.current!.clientHeight,
           p.WEBGL,
         );
-        canvas.parent(containerRef.current!);
+
         p.angleMode(p.DEGREES);
 
         cam = (p as any)._renderer.mainCamera;
 
-        cam.setPosition(-4.0, -60.4, 201.3);
-        cam.lookAt(-4.0, -60.4, 0.0);
+        cam.setPosition(-6.0, -55.7, 201.3);
+        cam.lookAt(-6.0, -55.7, 0.0);
 
         // cam.setPosition(-2.3, -61.3, 152.1);
         // cam.lookAt(-2.3, -61.3, 0.0);
@@ -34,7 +34,7 @@ const PlantSketch = () => {
       p.draw = () => {
         p.background(255, 255, 239);
         p.rotateY(angle);
-        p.randomSeed(18);
+        p.randomSeed(19);
         // p.orbitControl();
         branch(200, 0);
         angle += ANGLE_INC;
@@ -42,7 +42,7 @@ const PlantSketch = () => {
 
       const branch = (len: number, iteration: number) => {
         const short = -len / 4;
-        const mid = (-len / 7) * 2;
+        const mid = -len / 5;
         const long = -(len / 2);
 
         const segment = iteration === 0 ? short : iteration < 2 ? mid : long;
@@ -61,7 +61,7 @@ const PlantSketch = () => {
             p.pop();
           }
         } else {
-          // drawLeaf();
+          drawLeaf();
         }
       };
 
@@ -72,16 +72,10 @@ const PlantSketch = () => {
 
         p.fill(r, g, b, 200);
         p.noStroke();
-        p.beginShape();
 
-        for (let i = 45; i < 135; i++) {
-          p.vertex(3 * p.cos(i), 3 * p.sin(i));
-        }
-        for (let i = 135; i > 45; i--) {
-          p.vertex(7 * p.cos(i), 7 * p.sin(-i + 10));
-        }
-
-        p.endShape();
+        p.rotateZ(p.random(-15, 15));
+        p.rotateY(p.random(-15, 15));
+        p.rect(-2, -2, p.random(4, 5), p.random(5, 7));
       };
 
       p.keyPressed = () => {
@@ -97,7 +91,7 @@ const PlantSketch = () => {
       };
     };
 
-    const p5Instance = new p5(sketch);
+    const p5Instance = new p5(sketch, containerRef.current!);
 
     return () => {
       p5Instance.remove();

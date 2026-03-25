@@ -1,0 +1,238 @@
+import React, { useEffect, useRef } from "react";
+import p5Types from "p5";
+import p5 from "p5";
+
+const FONT_PATH = "../../assets/fonts/ancizar-serif-latin-400-normal.ttf";
+const TEXT_PATH = "../../assets/texts/1.txt";
+const SPACING_FACTOR = 0.95;
+
+const CAM_PRESETS = [
+  { pos: [-234, -136, 282], look: [-83, -137, -16] },
+  { pos: [132, -319, 202], look: [-74, -126, 13] },
+  { pos: [-17, 1, 135], look: [-67, -252, -37] },
+  { pos: [-155, -181, 133], look: [-69, -213, -27] },
+];
+
+const Tree2: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const state = useRef({
+    fontTree: undefined as p5Types.Font | undefined,
+    textTree: [] as string[],
+
+    fullTxt: "",
+    words: [] as string[],
+    text_trunk: "",
+
+    angle: 0,
+    ANGLE_INCREMENT: 0.05,
+
+    cameras: [] as p5Types.Camera[],
+    camIndex: 0,
+  });
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const sketch = (p: p5) => {
+      p.setup = async () => {
+        p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL).parent(
+          containerRef.current!,
+        );
+        p.angleMode(p.DEGREES);
+
+        const s = state.current;
+
+        try {
+          s.fontTree = await (p.loadFont(FONT_PATH) as any);
+          s.textTree = await (p.loadStrings(TEXT_PATH) as any);
+
+          if (s.fontTree) {
+            p.textFont(s.fontTree);
+          }
+          p.textSize(15);
+
+          if (s.textTree && s.textTree.length > 0) {
+            s.fullTxt = s.textTree.join("\n").replace(/\\n/g, "\n");
+            s.words = s.fullTxt.split(" ");
+            s.text_trunk = s.fullTxt.replace(/\s+/g, "");
+          }
+        } catch (error) {
+          console.error("Failed to load assets:", error);
+        }
+
+        s.cameras = CAM_PRESETS.map(({ pos, look }) => {
+          const c = p.createCamera();
+          c.setPosition(...(pos as [number, number, number]));
+          c.lookAt(...(look as [number, number, number]));
+          return c;
+        });
+
+        p.setCamera(s.cameras[0]);
+      };
+
+      p.draw = () => {
+        p.background(255, 255, 239);
+        p.orbitControl();
+        p.rotateY(state.current.angle);
+        p.randomSeed(11);
+
+        ground(p);
+        branch(p, 200, 0);
+
+        state.current.angle += state.current.ANGLE_INCREMENT;
+      };
+
+      const branch = (p: p5Types, len: number, iteration: number) => {
+        const strWgt = p.map(len, 10, 100, 0.5, 4);
+
+        if (iteration < 1) {
+          const endY = (-len / 3) * 2;
+          textLine(p, 0, 0, 0, 0, endY, 0, strWgt);
+          p.translate(-3, endY, 0);
+        } else if (iteration < 2) {
+          const endY = (-len / 3) * 2;
+          textLine(p, 0, 0, 0, 0, endY, 0, strWgt);
+          p.translate(0, endY, 0);
+        } else {
+          textLine(p, 0, 0, 0, 0, -len - 2, 0, strWgt);
+          p.translate(0, -len, 0);
+        }
+
+        if (len > 10) {
+          for (let i = 0; i < 4; i++) {
+            p.rotateY(72);
+            p.push();
+            p.rotateZ(p.random(30, 50));
+            branch(p, len * 0.5, iteration + 1);
+            p.pop();
+          }
+        } else {
+          p.fill(
+            200 + p.random(-20, 20),
+            130 + p.random(-20, 20),
+            20 + p.random(-20, 20),
+            255,
+          );
+          p.noStroke();
+          p.push();
+          p.translate(5, 0, 0);
+          p.rotateY(p.random(60, 120));
+          p.rotateX(180);
+          p.textSize(7);
+          p.text(p.random(state.current.words), 0, 0);
+          p.pop();
+        }
+      };
+
+      const textLine = (
+        p: p5Types,
+        x1: number,
+        y1: number,
+        z1: number,
+        x2: number,
+        y2: number,
+        z2: number,
+        strWgt: number,
+      ) => {
+        let index = 0;
+        let lineLen = 0;
+        const overdraw = p.textWidth("a");
+
+        const totalLen = p.dist(x1, y1, z1, x2, y2, z2);
+        const dirNorm = p.createVector(x2 - x1, y2 - y1, z2 - z1).normalize();
+
+        const forward = p.createVector(1, 0, 0);
+        const dot = p.constrain(forward.dot(dirNorm), -1, 1);
+        const rotAngle = p.acos(dot);
+        const axis = forward.cross(dirNorm);
+        const axisNorm = axis.mag() > 0.0001 ? axis.normalize() : null;
+
+        p.textSize(Math.max(strWgt * 1.5, 4));
+
+        let iters = 0;
+        const SAFETY = 2000;
+
+        while (lineLen < totalLen + overdraw && iters < SAFETY) {
+          const char =
+            state.current.text_trunk[index % state.current.text_trunk.length];
+          const charW = p.textWidth(char);
+
+          if (charW <= 0) {
+            index++;
+            iters++;
+            continue;
+          }
+
+          if (lineLen + charW > totalLen + overdraw) break;
+
+          p.push();
+          p.translate(
+            x1 + dirNorm.x * lineLen,
+            y1 + dirNorm.y * lineLen,
+            z1 + dirNorm.z * lineLen,
+          );
+
+          if (axisNorm) {
+            p.rotate(rotAngle, axisNorm);
+          } else if (dot < 0) {
+            p.rotate(p.PI, p.createVector(0, 1, 0));
+          }
+
+          p.fill(70, 40, 20, 200);
+          p.noStroke();
+          p.text(char, 0, 0);
+          p.pop();
+
+          lineLen += charW * SPACING_FACTOR;
+          index++;
+          iters++;
+        }
+      };
+
+      const ground = (p: p5Types) => {
+        p.push();
+        p.textSize(6);
+
+        for (let i = 0; i < 500; i++) {
+          p.push();
+          p.fill(
+            170 + p.random(-20, 20),
+            120 + p.random(-20, 20),
+            20 + p.random(-20, 20),
+            255,
+          );
+          p.translate(p.random(-100, 100), 0, p.random(-100, 100));
+          p.rotateZ(p.random(-20, 20));
+          p.rotateY(p.random(-200, 200));
+          p.text(p.random(state.current.words), 0, 0);
+          p.pop();
+        }
+
+        p.pop();
+      };
+
+      p.doubleClicked = () => {
+        state.current.camIndex =
+          (state.current.camIndex + 1) % state.current.cameras.length;
+
+        state.current.cameras.forEach((c, i) => {
+          c.setPosition(...(CAM_PRESETS[i].pos as [number, number, number]));
+          c.lookAt(...(CAM_PRESETS[i].look as [number, number, number]));
+        });
+
+        p.setCamera(state.current.cameras[state.current.camIndex]);
+      };
+
+      p.windowResized = () => p.resizeCanvas(p.windowWidth, p.windowHeight);
+    };
+
+    const p5Instance = new p5(sketch, containerRef.current);
+
+    return () => p5Instance.remove();
+  }, []);
+
+  return <div ref={containerRef}></div>;
+};
+
+export default Tree2;
