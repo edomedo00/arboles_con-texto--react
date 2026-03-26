@@ -7,3 +7,10 @@ $green: #659700;
 $green-tree: #50782f;
 $orange-tree: #c28214;
 $magenta-tree: #7d1f73;
+
+$breakpoints: (
+  "mobile": 480px,
+  "tablet": 768px,
+  "desktop": 1024px,
+  "wide": 1280px,
+);

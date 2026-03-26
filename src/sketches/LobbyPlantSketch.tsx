@@ -11,11 +11,9 @@ const PlantSketch = () => {
       let cam: any;
 
       p.setup = () => {
-        p.createCanvas(
-          containerRef.current!.clientWidth,
-          containerRef.current!.clientHeight,
-          p.WEBGL,
-        );
+        const { clientWidth, clientHeight } = containerRef.current!;
+
+        p.createCanvas(clientWidth, clientHeight, p.WEBGL);
 
         p.angleMode(p.DEGREES);
 
@@ -89,6 +87,12 @@ const PlantSketch = () => {
           );
         }
       };
+
+      p.windowResized = () => {
+        if (!containerRef.current) return;
+        const { clientWidth, clientHeight } = containerRef.current;
+        p.resizeCanvas(clientWidth, clientHeight);
+      };
     };
 
     const p5Instance = new p5(sketch, containerRef.current!);
@@ -98,7 +102,9 @@ const PlantSketch = () => {
     };
   }, []);
 
-  return <div ref={containerRef} style={{ width: "100%", height: "100%" }} />;
+  return (
+    <div ref={containerRef} style={{ width: "100%", aspectRatio: "4/3" }} />
+  );
 };
 
 export default PlantSketch;
