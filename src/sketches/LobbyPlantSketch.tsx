@@ -1,7 +1,11 @@
 import { useEffect, useRef } from "react";
 import p5 from "p5";
 
-const PlantSketch = () => {
+interface PlantSketchProps {
+  cameraZ?: number;
+}
+
+const PlantSketch = ({ cameraZ = 201.3 }: PlantSketchProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -18,8 +22,7 @@ const PlantSketch = () => {
         p.angleMode(p.DEGREES);
 
         cam = (p as any)._renderer.mainCamera;
-
-        cam.setPosition(-6.0, -55.7, 201.3);
+        cam.setPosition(-6.0, -55.7, cameraZ);
         cam.lookAt(-6.0, -55.7, 0.0);
 
         // cam.setPosition(-2.3, -61.3, 152.1);
@@ -100,7 +103,7 @@ const PlantSketch = () => {
     return () => {
       p5Instance.remove();
     };
-  }, []);
+  }, [cameraZ]);
 
   return (
     <div ref={containerRef} style={{ width: "100%", aspectRatio: "4/3" }} />

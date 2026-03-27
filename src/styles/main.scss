@@ -1,6 +1,26 @@
 @use "./fonts" as *;
 @use "./variables" as *;
-@import "./breakpoints";
+@use "./breakpoints" as *;
+
+:root {
+  --font-title: 9.6rem;
+  --spacing-title: 0.5rem;
+
+  @include respond(tab-land) {
+    --font-title: 9.6rem;
+    --spacing-title: 0.5rem;
+  }
+
+  @include respond(tab-port) {
+    --font-title: 9.6rem;
+    --spacing-title: 0.3rem;
+  }
+
+  @include respond(phone) {
+    --font-title: 7rem;
+    --spacing-title: 0.2rem;
+  }
+}
 
 *,
 *::before,
@@ -42,6 +62,10 @@ body {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: auto 1fr auto;
+
+  @include respond(phone) {
+    padding: 2rem 0rem;
+  }
 }
 
 .top-line {
@@ -50,6 +74,11 @@ body {
   margin-top: 8rem;
 
   border-bottom: 1px solid$black;
+
+  @include respond(phone) {
+    margin-top: 0rem;
+    border: none;
+  }
 }
 
 .bottom-line {
@@ -58,6 +87,10 @@ body {
   margin-bottom: 8rem;
 
   border-top: 1px solid$black;
+
+  @include respond(phone) {
+    border: none;
+  }
 }
 
 .text {
@@ -67,40 +100,59 @@ body {
     grid-column: 1 / span 7;
   }
 
+  @include respond(tab-port) {
+    grid-column: 1 / span 12;
+  }
+
   .text-below {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 4rem;
     padding: 4rem;
+
+    @include respond(tab-port) {
+      padding: 5rem 4rem 4rem 4rem;
+      gap: 2rem;
+    }
+
+    @include respond(phone) {
+      padding: 0;
+      gap: 2rem;
+    }
   }
 
   &__title {
     width: auto;
-    font-size: 9.6rem;
+    font-size: var(--font-title);
     line-height: 100%;
-    letter-spacing: 0.5rem;
+    letter-spacing: var(--spacing-title);
 
-    padding: 4rem 0 4rem 4rem;
+    padding: 4rem;
 
-    border-bottom: 1px solid$black;
+    border-bottom: 1px solid $black;
+    border-top: none;
 
-    // border-right: 1px solid$black;
-    // border-left: 1px solid$black;
+    @include respond(tab-port) {
+      padding: 4rem 4rem;
+    }
+
+    @include respond(phone) {
+      border: none;
+      padding: 2rem 0rem 2rem 0rem;
+      margin: 2rem 0rem 2rem 0rem;
+    }
 
     &--accent {
       color: $green;
     }
   }
 
-  &__text {
-  }
-
   &__contact {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding-top: 2rem;
+    padding-top: 3rem;
 
     &__names {
       display: flex;
@@ -127,13 +179,18 @@ body {
 .lobby-right {
   grid-column: 7 / span 6;
   display: grid;
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr auto;
-  // flex-direction: column;
   height: 100%;
   border-left: 1px solid$black;
 
   @include respond(tab-land) {
     grid-column: 8 / span 5;
+  }
+
+  @include respond(tab-port) {
+    grid-column: 1 / span 12;
+    border: none;
   }
 
   .plant-container {
@@ -142,20 +199,48 @@ body {
     min-height: 0;
     border-bottom: 1px solid$black;
     overflow: hidden;
+    grid-column: 1 / 3;
+
+    @include respond(tab-port) {
+      grid-column: 1 / 3;
+      height: 38vh;
+      justify-self: center;
+      // padding-top: 4rem;
+
+      border-bottom: none;
+    }
 
     canvas,
     & > * {
-      width: 100% !important;
-      height: 100% !important;
+      width: 100%;
+      height: 100%;
       display: block;
+
+      // @include respond(tab-port) {
+      //   width: 50%;
+      //   height: 60%;
+      // }
     }
   }
 
   .start {
     grid-row: 2;
+    grid-column: 1 / 3;
     justify-self: center;
     padding: 4rem 2rem;
-    // flex-shrink: 0;
+
+    @include respond(tab-port) {
+      letter-spacing: 1rem;
+
+      grid-column: 1 / span 12;
+      border: none;
+      padding: 2rem 1rem;
+      margin-bottom: 4rem;
+    }
+
+    @include respond(phone) {
+      letter-spacing: 0.2rem;
+    }
   }
 }
 
@@ -163,7 +248,7 @@ body {
   text-decoration: none;
   font-family: "Ancizar Serif";
   font-weight: 400;
-  font-size: 9.6rem;
+  font-size: var(--font-title);
   line-height: 100%;
   letter-spacing: 0.5rem;
 
@@ -177,9 +262,12 @@ body {
   color: $green;
   transition: all 0.2s;
 
+  @include respond(tab-port) {
+    letter-spacing: 0.5rem;
+  }
+
   &:hover {
     transform: scale(1.05);
-    // letter-spacing: 100%;
   }
 }
 
