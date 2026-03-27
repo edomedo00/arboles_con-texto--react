@@ -1,6 +1,9 @@
 import React from "react";
+import useBreakpoint from "../hooks/useBreakpoint";
 
 const LobbyText: React.FC = () => {
+  const breakpoint = useBreakpoint();
+
   return (
     <div className="text">
       <p className="text__title">
@@ -8,32 +11,68 @@ const LobbyText: React.FC = () => {
       </p>
       <div className="text-below">
         <p className="text__text">
-          metáflora fractal parte de la idea de arbol y sus asociaciones: árbol
-          como hojas, copa; árbol como tronco, refugio; árbol como raíces,
-          origen; árbol como palabras, metáfora
+          De metáflora fractal nace una experiencia compuesta multidisciplinar
+          que inicia en un punto lírico - reflexivo que gira alrededor de las
+          formas pertenecientes a los árboles, entendiendo formas como la
+          posibilidad asociativa a los árboles desde lo más literal como sus
+          partes físicas hasta algo mucho más simbólico como las palabras detrás
+          de esta figura "árbol" en toda su extensión.
         </p>
         <p className="text__text">
-          desde ahí se construyen figuras arbóreas de manera generativa
-          utilizando fractales, los patrones recursivos de la naturaleza, y
-          azar, hasta donde le es posible a una computadora
+          Esta práctica converge con la construcción de figuras arbóreas de
+          manera generativa utilizando un algoritmo recursivo que genera la
+          misma figura n veces con variaciones pseudoaleatorias en cada
+          iteración hasta (concluir/encontrar su extremo) en hojas/palabras.
+          cada elemento de la escena esta construido con palabras
         </p>
         <p className="text__text">
-          resultan árboles porque las figuras siguen un proceso de generacion
-          similar al de sus inspiraciones —en un entorno determinista y
-          controlado—
+          de esta convergencia obtenemos descripción literal del producto
         </p>
         <div className="text__contact">
           <div className="text__contact__names">
-            <p>Poesía por Seydi Pineda</p>
-            <p>Código por Edmundo Medel</p>
+            <div>
+              <p className="names-text">Poesía por Seydi Pineda </p>
+              {breakpoint === "phone" ? (
+                <a
+                  href="https://www.instagram.com/seydidemiel/"
+                  className="instagram-small-text"
+                >
+                  (@seydidemiel)
+                </a>
+              ) : (
+                <></>
+              )}
+            </div>
+            <div>
+              <p className="names-text">Código por Edmundo Medel</p>
+              {breakpoint === "phone" ? (
+                <a
+                  href="https://www.instagram.com/_edomedo___/"
+                  className="instagram-small-text"
+                >
+                  (@_edomedo___)
+                </a>
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
           <div className="text__contact__instagram">
-            <a href="#" className="link">
-              @seydidemiel
-            </a>
-            <a href="#" className="link">
-              @edomedo
-            </a>
+            {breakpoint !== "phone" ? (
+              <a href="https://www.instagram.com/seydidemiel/" className="link">
+                @seydidemiel
+              </a>
+            ) : (
+              <></>
+            )}
+
+            {breakpoint !== "phone" ? (
+              <a href="https://www.instagram.com/_edomedo___/" className="link">
+                @_edomedo___
+              </a>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>

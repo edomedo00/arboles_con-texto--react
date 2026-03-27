@@ -20,6 +20,11 @@ const TreeSketch: React.FC<TreeSketchProps> = ({ setPage, page }) => {
   const controlsRef = useRef<HTMLDivElement>(null);
   const treeControls = useRef<Tree3Controls | null>(null);
 
+  const getHasHover = () =>
+    window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  const [hasHover, setHasHover] = React.useState(getHasHover());
+
   useEffect(() => {
     fetch(`/arboles_con-texto--react/assets/texts/${page}.txt`)
       .then((res) => res.text())
@@ -28,22 +33,79 @@ const TreeSketch: React.FC<TreeSketchProps> = ({ setPage, page }) => {
   }, [page]);
 
   useEffect(() => {
-    const header = headerRef.current;
-    const controls = controlsRef.current;
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const handler = () => setHasHover(mq.matches);
 
-    if (!header) return;
-    if (!controls) return;
-
-    const timer = setTimeout(() => {
-      header.style.animation = "none";
-      controls.style.animation = "none";
-    }, 6000);
-
-    return () => clearTimeout(timer);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
   }, []);
 
+  useEffect(() => {
+    const header = headerRef.current;
+    const controls = controlsRef.current;
+    if (!header || !controls) return;
+
+    if (!hasHover) {
+      // mobile: always visible
+      header.style.transition = "none";
+      header.style.opacity = "1";
+      controls.style.transition = "none";
+      controls.style.opacity = "1";
+      return;
+    }
+
+    // desktop: fade out after 6s, then hover to show
+    const fadeTransition = "opacity 2s cubic-bezier(0.72, 0.14, 0.8, 0.3)";
+    const showTransition = "opacity 0.8s ease";
+
+    const fadeOut = (el: HTMLElement) => {
+      el.style.transition = fadeTransition;
+      el.style.opacity = "0";
+    };
+
+    const onMouseEnter = (el: HTMLElement) => {
+      el.style.transition = showTransition;
+      el.style.opacity = "1";
+    };
+
+    const onMouseLeave = (el: HTMLElement) => {
+      el.style.transition = fadeTransition;
+      el.style.opacity = "0";
+    };
+
+    const timer = setTimeout(() => {
+      fadeOut(header);
+      fadeOut(controls);
+
+      const onHeaderEnter = () => onMouseEnter(header);
+      const onHeaderLeave = () => onMouseLeave(header);
+      const onControlsEnter = () => onMouseEnter(controls);
+      const onControlsLeave = () => onMouseLeave(controls);
+
+      header.addEventListener("mouseenter", onHeaderEnter);
+      header.addEventListener("mouseleave", onHeaderLeave);
+      controls.addEventListener("mouseenter", onControlsEnter);
+      controls.addEventListener("mouseleave", onControlsLeave);
+
+      (header as any)._cleanup = () => {
+        header.removeEventListener("mouseenter", onHeaderEnter);
+        header.removeEventListener("mouseleave", onHeaderLeave);
+      };
+      (controls as any)._cleanup = () => {
+        controls.removeEventListener("mouseenter", onControlsEnter);
+        controls.removeEventListener("mouseleave", onControlsLeave);
+      };
+    }, 6000);
+
+    return () => {
+      clearTimeout(timer);
+      (header as any)._cleanup?.();
+      (controls as any)._cleanup?.();
+    };
+  }, [hasHover]);
+
   return (
-    <div className="tree-main">
+    <div className={`tree-main ${hasHover ? "has-hover" : "no-hover"}`}>
       <div className="interface-container">
         <div className="header" ref={headerRef}>
           <button
@@ -58,7 +120,6 @@ const TreeSketch: React.FC<TreeSketchProps> = ({ setPage, page }) => {
           {/* eslint-disable-next-line */}
           <div className="interface__text">
             <p className="text-blur">
-              {" "}
               {text.split(" ").map((word, i) => (
                 <span key={i} className="text-blur__word">
                   {word}{" "}

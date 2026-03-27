@@ -115,6 +115,8 @@ const Tree1: React.FC<Tree1Props> = ({ onReady }) => {
 
       p.draw = () => {
         p.background(255, 255, 239);
+        // if (!isMobile) {
+        // }
         p.orbitControl();
         p.rotateY(state.current.angle);
         p.randomSeed(state.current.seed);
