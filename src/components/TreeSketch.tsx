@@ -100,7 +100,7 @@ const TreeSketch: React.FC<TreeSketchProps> = ({ setPage, page }) => {
         controls.removeEventListener("mouseenter", onControlsEnter);
         controls.removeEventListener("mouseleave", onControlsLeave);
       };
-    }, 1000);
+    }, 10000);
 
     const timerInstructions = setTimeout(() => {
       fadeOut(instructions);
